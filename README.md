@@ -60,30 +60,27 @@ Three rules hold the levels together:
 
 The editor at level 4 is the final gate, and it is given every review. When all three models at level 3 agree on a change, the editor works out exactly what changes. When they are split two to one, the editor decides whether the change is made.
 
-### How a level earns its place
+### How it gets there
 
-Every level climbs the same four steps, one at a time. It moves up a step only when its public record shows that it has earned it.
+1. **Build it in shadow, one level at a time.** Levels 1 and 2 run today. Level 3 is added next, then level 4. Each new level starts in shadow and has to prove itself there.
+2. **Prove the whole system.** All four levels run beside the maintainer's own decisions until the public record shows the full system can be trusted. Until then, nothing the reviewer says has any effect.
+3. **Then automate it.** First with the maintainer able to overrule it, then alone.
 
-1. **Shadow.** It records what it would decide. Nothing it says has any effect.
-2. **Advises.** Its verdict is posted on the proposal, where the sender and the maintainer can both read it. The maintainer still decides.
-3. **Acts.** It passes or stops proposals itself, and tells the sender. The maintainer can still overrule it.
-4. **Alone.** It acts, and no maintainer checks its work.
+Today the first step is under way. The verdicts of levels 1 and 2 go to a public log, not onto the proposal, and no level is shown another's reviews yet. The gate already concludes by two of three. The panel is scored only when all three agree, and will be scored on two of three before the system is trusted on that. The maintainer still reviews every proposal himself, with his own review by the most capable AI models, and his decision is the only one that counts. Every verdict is kept beside his decision, and a public scoreboard counts how often they match.
 
-Today levels 1 and 2 are on the first step. Their verdicts go to a public log, not onto the proposal, and no level is shown another's reviews yet. The gate already concludes by two of three. The panel is scored only when all three agree, and will be scored on two of three before it acts on that. The maintainer still reviews every proposal himself, with his own review by the most capable AI models, and his decision is the only one that counts. Every verdict is kept beside his decision, and a public scoreboard counts how often they match.
-
-Two kinds of outcome are held to a stricter test, because a wrong decision on either does the most harm: changing the blueprint, and ruling out a dead end, which adds to the Idea Graveyard. The panel never decides these alone. The most it can do is pass a proposal up to level 3, and only after it has matched the maintainer with no disagreement at all, including on cases he decided before he could read its verdict.
+Two kinds of outcome are held to a stricter test, because a wrong decision on either does the most harm: changing the blueprint, and ruling out a dead end, which adds to the Idea Graveyard. The panel never decides these alone. It passes them up, and it has proved itself on them only when it has matched the maintainer with no disagreement at all, including on cases he decided before he could read its verdict.
 
 ### When no maintainer is needed
 
-Once every level has proved itself, proposals are judged, answered and folded in by the reviewer alone. Some things stay as they are:
+Once the whole system has proved itself, proposals are judged, answered and folded in by the reviewer alone. Some things stay as they are:
 
 - **Everything is in the open.** Every verdict, every reason and every change is public.
 - **Every change can be undone.** Each change to the blueprint is recorded on its own, so one that turns out to be wrong can be reversed.
 - **A sender who disagrees can ask for a fresh review** at the highest level.
 - **One switch stops the whole reviewer.** An owner holds it. The owner can stop the reviewer or undo a change, and decides nothing else about any proposal.
-- **The record goes on being kept.** A level whose record slips goes back a step.
+- **The record goes on being kept.** If it slips, the reviewer goes back a step.
 
-How a level is checked once no maintainer is deciding beside it is not designed yet. Nothing moves to the last step until it is.
+How the reviewer is checked once no maintainer is deciding beside it is not designed yet. It does not run alone until that is.
 
 ## What it does today
 
