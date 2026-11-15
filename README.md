@@ -29,13 +29,14 @@ config:
 ---
 flowchart TD
     A["A proposal arrives"] --> B["Level 1: gate<br/>Is this a genuine proposal?<br/>Claude Haiku 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6 Luna"]
-    B -- passes --> C["Level 2: panel<br/>Which outcome fits it?<br/>Claude Sonnet 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6.1 Sol"]
-    C -- passes --> D["Level 3: frontier review<br/>Is the panel right?<br/>For example:<br/>Claude Opus 5.5<br/>Gemini 4 Carbon<br/>GPT-6 Astra"]
-    D -- passes --> E["Level 4: editor<br/>What changes in the blueprint?<br/>For example:<br/>Claude Fable 5.2"]
-    E --> F["The blueprint is updated<br/>The sender is told"]
-    B -. stopped .-> N["The sender is told<br/>the outcome and why"]
-    C -. stopped .-> N
-    D -. stopped .-> N
+    B -- 2 of 3 pass --> C["Level 2: panel<br/>Which outcome fits it?<br/>Claude Sonnet 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6.1 Sol"]
+    C -- 2 of 3 pass --> D["Level 3: frontier review<br/>Is the panel right?<br/>For example:<br/>Claude Opus 5.5<br/>Gemini 4 Carbon<br/>GPT-6 Astra"]
+    D -- 2 of 3 pass --> E["Level 4: editor, the final gate<br/>What changes in the blueprint?<br/>For example:<br/>Claude Fable 5.2<br/>or Claude Mythos 5.2"]
+    E -- passes --> F["The blueprint is updated<br/>The sender is told"]
+    B -. 2 of 3 stop .-> N["The sender is told<br/>the outcome and why"]
+    C -. 2 of 3 stop .-> N
+    D -. 2 of 3 stop .-> N
+    E -. stops .-> N
     classDef planned stroke-dasharray: 6 4
     class D,E,F,N planned
 ```
@@ -47,15 +48,17 @@ Boxes with a solid edge run today, in shadow mode. Boxes with a dashed edge are 
 | 1. Gate | Is this a genuine proposal, or spam? | Three small models, one from each of three providers: Claude Haiku 5.5, Gemini 4 Hydrogen and GPT-6 Luna | Runs in shadow mode |
 | 2. Panel | Which outcome fits this proposal? | Three stronger models: Claude Sonnet 5.5, Gemini 4 Hydrogen and GPT-6.1 Sol | Runs in shadow mode |
 | 3. Frontier review | Is the panel right? | The most capable model from each provider, for example Claude Opus 5.5, Gemini 4 Carbon and GPT-6 Astra | Planned, not designed |
-| 4. Editor | What exactly changes in the blueprint? | One of the most capable models, for example Claude Fable 5.2 | Planned, not designed |
+| 4. Editor | What exactly changes in the blueprint? And does it change, when level 3 was split? | One of the most capable models, for example Claude Fable 5.2 or Claude Mythos 5.2 | Planned, not designed |
 
 Models are replaced as better ones arrive. `settings/config.yml` names the ones in use.
 
 Three rules hold the levels together:
 
-- **Inside a level, no model sees another's answer.** So when all three agree, it means something.
-- **Each level is given the reviews of the levels before it.** A later level can build on an earlier one, or overturn it.
-- **A level stops a proposal only when all of its models agree.** When they are split, the proposal is passed up.
+- **Inside a level, no model sees another's answer.** So when they agree, it means something.
+- **Two of the three models decide.** A proposal passes a level when at least two of its models pass it, and is stopped when at least two say stop. If one model gives no answer and the other two disagree, the proposal is passed up.
+- **Each level is given the reviews of the levels before it,** including the review of a model that was outvoted. A later level can build on an earlier one, overturn it, or take up what the outvoted model saw.
+
+The editor at level 4 is the final gate, and it is given every review. When all three models at level 3 agree on a change, the editor works out exactly what changes. When they are split two to one, the editor decides whether the change is made.
 
 ### How a level earns its place
 
@@ -66,7 +69,7 @@ Every level climbs the same four steps, one at a time. It moves up a step only w
 3. **Acts.** It passes or stops proposals itself, and tells the sender. The maintainer can still overrule it.
 4. **Alone.** It acts, and no maintainer checks its work.
 
-Today levels 1 and 2 are on the first step. Their verdicts go to a public log, not onto the proposal. The maintainer still reviews every proposal himself, with his own review by the most capable AI models, and his decision is the only one that counts. Every verdict is kept beside his decision, and a public scoreboard counts how often they match.
+Today levels 1 and 2 are on the first step. Their verdicts go to a public log, not onto the proposal, and no level is shown another's reviews yet. The gate already concludes by two of three. The panel is scored only when all three agree, and will be scored on two of three before it acts on that. The maintainer still reviews every proposal himself, with his own review by the most capable AI models, and his decision is the only one that counts. Every verdict is kept beside his decision, and a public scoreboard counts how often they match.
 
 Two kinds of outcome are held to a stricter test, because a wrong decision on either does the most harm: changing the blueprint, and ruling out a dead end, which adds to the Idea Graveyard. The panel never decides these alone. The most it can do is pass a proposal up to level 3, and only after it has matched the maintainer with no disagreement at all, including on cases he decided before he could read its verdict.
 
