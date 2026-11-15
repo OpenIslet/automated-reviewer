@@ -22,6 +22,11 @@ That is where this is going, not where it is. The project is getting there in st
 A proposal has to pass every level. Any level can stop it. A proposal that is stopped goes no further, and the person who sent it is told the outcome and the reasons.
 
 ```mermaid
+---
+config:
+  flowchart:
+    wrappingWidth: 260
+---
 flowchart TD
     A["A proposal arrives"] --> B["Level 1: gate<br/>Is this a genuine proposal?<br/>Claude Haiku 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6 Luna"]
     B -- passes --> C["Level 2: panel<br/>Which outcome fits it?<br/>Claude Sonnet 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6.1 Sol"]
