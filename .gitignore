@@ -1,0 +1,11 @@
+# Never published: local copies of real proposals, what was fetched to check against them, and dry-run output.
+local/
+
+# Made by Python and by the tests.
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Written by a run.
+results.json
+scoreboard.json

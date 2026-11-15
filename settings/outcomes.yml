@@ -1,0 +1,66 @@
+# The decisions the maintainer can record on a proposal, and what each one means.
+#
+# The prompts quote these names and meanings word for word, so changing any of them starts a new policy version.
+#
+# source: published  The name and meaning are copied word for word from the project's published definitions of the
+#                    seven outcomes (the Contributions page of openislet.org).
+# source: trial      Not one of the seven published outcomes. The meaning was written for this trial.
+
+outcomes:
+  - key: changed_blueprint
+    label: "outcome:changed-blueprint"
+    name: Changed the blueprint
+    meaning: A design, test, number or sentence changed because of it.
+    source: published
+
+  - key: dead_end
+    label: "outcome:dead-end"
+    name: Ruled out a dead end
+    meaning: Showed that part of the blueprint will not work. Now in the Idea Graveyard.
+    source: published
+
+  - key: evidence
+    label: "outcome:evidence"
+    name: Added evidence
+    meaning: New papers or data that the blueprint now rests on.
+    source: published
+
+  - key: open_question
+    label: "outcome:open-question"
+    name: Raised an open question
+    meaning: A gap that only a lab test can settle, now on the list.
+    source: published
+
+  - key: later
+    label: "outcome:later"
+    name: Kept for later
+    meaning: Sound, but it needs something first. Looked at again every three months.
+    source: published
+
+  - key: not_taken_up
+    label: "outcome:not-taken-up"
+    name: Not taken up
+    meaning: Reviewed and not used, with the reason.
+    source: published
+
+  - key: already_covered
+    label: "outcome:already-covered"
+    name: Already covered
+    meaning: The blueprint or an earlier IIP already had it.
+    source: published
+
+  - key: needs_work
+    label: "decision:needs-work"
+    name: Needs work
+    meaning: Sent back to the contributor with what to change before it can be decided.
+    source: trial
+
+  - key: spam
+    label: "outcome:spam"
+    name: Spam
+    meaning: Not a good-faith proposal. Spam, abuse or off-topic material.
+    source: trial
+
+# Not a decision. An issue carrying this label, applied by an allowed decider, was set aside for an administrative
+# reason. It is recorded as excluded and no model is called.
+administrative_closure_label: "status:closed-triage"

@@ -1,0 +1,140 @@
+# Settings for the automated reviewer. Read by reviewer/config.py, which stops on any key or value it does not recognise.
+# Sizes and limits are in calls and tokens.
+
+# "shadow" is the only value the script accepts. It stops at start-up on anything else, before it reads anything.
+mode: shadow
+
+# The trial only reads the source repository. Everything it writes goes to the home repository.
+source_repo: OpenIslet/openislet
+home_repo: OpenIslet/automated-reviewer
+default_branch: main
+
+# The two pinned, locked issues in the home repository, by number. A real run is refused while either is null.
+log_issue: 1
+scoreboard_issue: 2
+# When a new log issue is started, the old one's number moves into this list. Every record in the listed issues is
+# still read, so nothing is reviewed twice and the limits still count every call. New records go to log_issue.
+earlier_log_issues: []
+
+# The freeze. Null until the prompts and code are settled. Once set, results for that policy version on proposals
+# submitted at or after that time are prospective and count towards graduation. Everything else is retrospective.
+freeze: null
+# freeze:
+#   policy_version: (the 64-character policy version being frozen)
+#   at: "2027-01-01T00:00:00Z"
+
+# Who may record a decision. A decision label from any other account is ignored. Explicit logins only.
+allowed_deciders:
+  - agent-kev
+
+# The account that opens proposals and posts the "Automatic checks" comment.
+submission_bot: "openislet-submissions[bot]"
+
+# The only author whose comments are read as records, in the log and for the scoreboard.
+record_author: "github-actions[bot]"
+
+# Issues that are not proposals. Issue 1 is the founding release.
+skip_issues: [1]
+
+# A proposal decided by the account that wrote it makes no calls, unless a manual run names it.
+reconcile_self_decided: false
+
+caps:
+  proposals_per_run: 10
+  proposals_per_day: 20           # per UTC day. Fixture runs do not count towards this one.
+  monthly_per_provider:           # counted from the log, per calendar month in UTC. Fixture runs count.
+    calls: 300
+    input_tokens: 15000000
+    output_tokens: 4000000
+  runs_before_error: 3            # a model with no answer after this many runs is recorded as an error
+
+context:
+  # Read in full from the last commit before the proposal was submitted. "*" stands for a version number.
+  files:
+    blueprint: ISLET-1-BLUEPRINT.md
+    playbook: docs/STAGE-0-EXECUTION-PLAYBOOK.md
+    idea_graveyard: data/graveyard/idea_graveyard_v*.json
+  # Passages from files the Draft cites.
+  excerpts:
+    lines_either_side: 40
+    lines_when_no_line_is_given: 80
+    max_tokens: 15000
+  # Where the project's extracted evidence is, newest arrangement first. The first one found at the commit is used.
+  evidence_places:
+    - name: evidence_graph
+      file: data/extracted/context_evidence_graph_v*.json
+    - name: study_files
+      file: data/extracted/ring1_study_dossiers_v*.jsonl
+      per_study_folder: data/extracted
+  corpus_list: data/raw/corpus_manifest_all_sources.jsonl
+
+# The submission bot's first comment. Only the part under the second heading can reach a model, and of that part
+# only the rows named here. A row about the blind review, the AI tools or personal details is never on this list,
+# and a row the script does not know is left out.
+checks_comment:
+  starts_with: "## Automatic checks"
+  left_out_heading: "### The basic rules"
+  included_heading: "### The other checks"
+  within_minutes: 10
+  included_rows:
+    - Says which design it changes
+    - Papers are cited by PubMed ID
+    - Quotes match their papers
+    - Idea Graveyard
+    - Not already known
+    - Written against the current version
+
+# Stage A: is this a good-faith proposal? Three small models, one from each provider, each answering in text with a
+# short reason. Two that agree make the verdict.
+gate:
+  threshold: 0.5                  # only for a model that answers with a probability and no text. None is in use.
+  effort: medium                  # the gate reads one short proposal, and must never hold a real one
+  max_input_tokens: 40000         # by the script's own high estimate; a larger input is recorded as too large, never cut
+  max_output_tokens: 8000         # includes reasoning
+  models:
+    - slot: gate-1
+      provider: anthropic
+      model: claude-haiku-5-5
+      kind: text
+    - slot: gate-2
+      provider: google
+      model: gemini-4-hydrogen
+      kind: text
+    - slot: gate-3
+      provider: openai
+      model: gpt-6-luna
+      kind: text
+
+# Stage B: which outcome will the maintainer record? Three stronger models, all three must agree to be unanimous.
+panel:
+  effort: high
+  max_input_tokens: 250000        # by the script's own high estimate; a larger input is recorded as too large, never cut
+  max_output_tokens: 32000        # includes reasoning
+  self_consistency_every: 5       # a second call to each model on every fifth proposal
+  reasons_kept: 3
+  reason_max_characters: 300
+  models:
+    - slot: panel-1
+      provider: google
+      model: gemini-4-hydrogen
+    - slot: panel-2
+      provider: openai
+      model: gpt-6.1-sol
+    - slot: panel-3
+      provider: anthropic
+      model: claude-sonnet-5-5
+
+# What the trial may do with a result, per stage and per outcome. Every value is "shadow": record it and do nothing.
+# The script stops on any other value. See "Ready to switch on" in docs/SPEC.md.
+authority:
+  gate: shadow
+  outcomes:
+    changed_blueprint: shadow
+    dead_end: shadow
+    evidence: shadow
+    open_question: shadow
+    later: shadow
+    not_taken_up: shadow
+    already_covered: shadow
+    needs_work: shadow
+    spam: shadow
