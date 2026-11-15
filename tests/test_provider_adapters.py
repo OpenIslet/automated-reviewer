@@ -80,7 +80,7 @@ def test_google_panel_request_holds_exactly_what_the_spec_allows():
     assert headers == {"x-goog-api-key": KEY, "Api-Revision": "2026-05-20"} == count_headers
     assert set(body) == {"model", "system_instruction", "input", "generation_config", "response_format", "store"}  # no tool, sampling or cache setting
     assert body["model"] == "gemini-4-hydrogen" and body["store"] is False
-    assert body["generation_config"] == {"thinking_level": "high", "max_output_tokens": 32000}
+    assert body["generation_config"] == {"thinking_level": "xhigh", "max_output_tokens": 64000}
     assert body["response_format"] == {"type": "text", "mime_type": "application/json", "schema": PANEL_SCHEMA}
     assert body["system_instruction"] == PREPARED.panel.instructions()
     assert body["input"] == "\n\n".join(part.text for part in PREPARED.panel.rest())
@@ -166,7 +166,7 @@ def test_openai_panel_request_holds_exactly_what_the_spec_allows():
     assert count_url == "https://api.openai.com/v1/responses/input_tokens" and url == "https://api.openai.com/v1/responses"
     assert headers == {"Authorization": f"Bearer {KEY}"} == count_headers
     assert set(body) == {"model", "instructions", "input", "reasoning", "max_output_tokens", "text", "store"}  # no tool, sampling or stream setting
-    assert body["model"] == "gpt-6.1-sol" and body["store"] is False and body["max_output_tokens"] == 32000 and body["reasoning"] == {"effort": "high"}
+    assert body["model"] == "gpt-6.1-sol" and body["store"] is False and body["max_output_tokens"] == 64000 and body["reasoning"] == {"effort": "xhigh"}
     assert body["text"] == {"format": {"type": "json_schema", "name": "verdict", "schema": PANEL_SCHEMA, "strict": True}}
     assert body["instructions"] == PREPARED.panel.instructions()
     assert body["input"] == [{"role": "user", "content": [{"type": "input_text", "text": part.text} for part in PREPARED.panel.rest()]}]

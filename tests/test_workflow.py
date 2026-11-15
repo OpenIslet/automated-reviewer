@@ -9,6 +9,7 @@ from reviewer.config import load
 from .test_config import SHIPPED
 
 ROOT = SHIPPED.parent
+SWITCHED_ON = {"GEMINI_API_KEY", "OPENAI_API_KEY"}  # the providers whose key line is live in the workflow. Each is tested on one proposal first.
 TEXT = (ROOT / ".github" / "workflows" / "automated-reviewer.yml").read_text(encoding="utf-8")
 WORKFLOW = yaml.safe_load(TEXT)
 TRIGGERS = WORKFLOW.get("on", WORKFLOW.get(True))  # YAML reads a bare "on" as true
@@ -76,10 +77,11 @@ def test_no_command_contains_a_value_from_outside():
     commands = [step["run"] for job in JOBS for step in steps(job) if "run" in step]
     assert len(commands) == 6 and all("${{" not in command for command in commands)
     review = next(step for step in steps("review") if step.get("name") == "Review")
-    assert set(review["env"]) == {"GITHUB_TOKEN", "AUTOMATED_REVIEWER_ENABLED", "REVIEWER_NUMBERS", "REVIEWER_OVERRIDE_CAPS", "REVIEWER_MODE"}
+    assert set(review["env"]) == {"GITHUB_TOKEN", "AUTOMATED_REVIEWER_ENABLED", "REVIEWER_NUMBERS", "REVIEWER_OVERRIDE_CAPS", "REVIEWER_MODE"} | SWITCHED_ON
+    assert all(review["env"][key] == "${{ secrets." + key + " }}" for key in SWITCHED_ON)  # each key under its own name, from the environment's secrets
     assert TRIGGERS["workflow_dispatch"]["inputs"]["mode"]["options"] == ["reconcile", "fixtures", "scoreboard"]
     assert review["env"]["AUTOMATED_REVIEWER_ENABLED"] == "${{ vars.AUTOMATED_REVIEWER_ENABLED }}" and review["env"]["REVIEWER_NUMBERS"] == "${{ inputs.numbers }}"
-    assert "--dry-run" in review["run"]  # until the real model adapters exist
+    assert review["run"] == "python scripts/automated_reviewer.py review --out results.json"  # a real run: the providers switched on are asked
 
 
 def test_dependencies_are_installed_from_a_lock_file_with_hashes():
@@ -96,7 +98,11 @@ def test_every_line_that_names_a_secret_is_inside_the_review_step_even_while_it_
     start, end = TEXT.index("      - name: Review\n"), TEXT.index("      - name: Keep the results, whatever happened")
     named = [found.start() for found in re.finditer(r"secrets\.", TEXT)]
     assert len(named) == 3 and all(start < at < end for at in named)
-    assert all(line.lstrip().startswith("# ") for line in TEXT.split("\n") if "secrets." in line)  # none is switched on yet
+    from reviewer.providers import KEYS
+
+    live = {line.strip().split(":")[0] for line in TEXT.split("\n") if "secrets." in line and not line.lstrip().startswith("#")}
+    waiting = {line.strip().lstrip("# ").split(":")[0] for line in TEXT.split("\n") if "secrets." in line and line.lstrip().startswith("#")}
+    assert live == SWITCHED_ON and live | waiting == set(KEYS.values()) and not live & waiting
 
 
 def test_the_policy_version_covers_every_file_that_shapes_a_request_or_the_reading_of_an_answer():

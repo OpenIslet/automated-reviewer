@@ -1,6 +1,6 @@
 # Automated reviewer: the review pipeline, in shadow mode
 
-**Status:** design, revision 5.3 (2026-11-15). Revision 4.1 was reviewed and approved for implementation. Revision 4.2 added what was settled while building, revision 5 records three decisions the maintainer made on 15 November, and revision 5.1 records the faults that two independent reviews of the build found that day. **The spec's reviewer has reviewed the build and revisions 4.2, 5 and 5.1.** It approved 4.2, and approved the build to go on to the go-live steps once four faults it found were put right. Revision 5.2 records those fixes and some smaller ones. Revision 5.3 records the maintainer's answers to the two questions of policy the review raised. Section 16 lists every change; 5.2 and 5.3 are its last two tables and have not themselves been reviewed.
+**Status:** design, revision 5.4 (2026-11-15). Revision 4.1 was reviewed and approved for implementation. Revision 4.2 added what was settled while building, revision 5 records three decisions the maintainer made on 15 November, and revision 5.1 records the faults that two independent reviews of the build found that day. **The spec's reviewer has reviewed the build and revisions 4.2, 5 and 5.1.** It approved 4.2, and approved the build to go on to the go-live steps once four faults it found were put right. Revision 5.2 records those fixes and some smaller ones, revision 5.3 the maintainer's answers to the two questions of policy the review raised, and revision 5.4 his decision to run the panel at its deepest setting. Section 16 lists every change; 5.2 to 5.4 are its last three tables and have not themselves been reviewed.
 **Scope:** process and code only. No scientific knowledge is needed to implement it.
 **How to read it:** the numbered sections were written for revision 4. Where one of them disagrees with the section "Revision 5", revision 5 is what the code does. Section 16 lists every change and why.
 
@@ -519,7 +519,7 @@ Per proposal, before caching:
 
 | Call | Input tokens | Output tokens, including reasoning |
 |---|---|---|
-| Each of three panel calls | about 93,000 (blueprint, playbook, Idea Graveyard, index and proposal), plus up to 15,000 of cited excerpts | 8,000 to 25,000 at `high` effort |
+| Each of three panel calls | about 93,000 (blueprint, playbook, Idea Graveyard, index and proposal), plus up to 15,000 of cited excerpts | Up to the limit of 64,000 at `xhigh` effort (revision 5.4). The first real runs will show the usual figure |
 | Each of three gate calls | the proposal text only | a few hundred |
 
 - The self-consistency calls add about 20%.
@@ -601,7 +601,7 @@ Answered from each provider's published documentation on 14 November 2026. The a
 Still to check:
 
 - Whether each provider's usage limit is a hard stop or only an alert.
-- Whether a ten-minute plain request is long enough for Gemini 4 Hydrogen and GPT-6.1 Sol at high effort. If it is not, those two adapters need streaming or background mode.
+- Whether a plain request is long enough for Gemini 4 Hydrogen and GPT-6.1 Sol. Since revision 5.4 the panel runs at `xhigh` and a request waits up to thirty minutes. If an answer still does not arrive in that time, or the connection is dropped while waiting, those two adapters need streaming.
 
 Answered in review, to confirm while building:
 
@@ -762,3 +762,10 @@ Each of these is a design of its own. This spec builds none of them.
 | No blind share for now. The suggestion stays on the table: the reviewer waits, for about one proposal in five, until the maintainer has decided (sections 8, 9) | The maintainer's decision. He intends to move to blind review later |
 | Changing the blueprint and ruling out a dead end are held to a stricter test. The panel may only pass them up to the third layer and never decides them alone; no disagreement is allowed in the 50; a miss on either side of either is a critical miss; and at least 10 unanimous cases must have been decided before any of the verdict was posted, with no disagreement among them (sections 8, 9, 15) | The maintainer's decision, on the advice of the spec's reviewer. A wrong decision on either does the most harm: one alters the reference design, the other steers later contributors away from a route |
 | Until blind cases exist, those two types cannot pass their count. The scoreboard shows them as waiting for blind cases, and says how many each has (section 9) | It follows from the two decisions above, and it is the safe direction: the types where a mistake does the most harm stay with the maintainer until there is a clean measure |
+
+**Revision 5.4** (15 November). The maintainer's decision on how deeply the panel thinks. Not yet reviewed.
+
+| Change | Why |
+|---|---|
+| The panel runs at each model's `xhigh` setting, the deepest that all three share, with an output limit of 64,000 tokens. The gate stays at `medium` (sections 5, 6) | The maintainer's decision. A verdict from the panel has to be one worth trusting, and at `high` he would want to review each one again himself. A model's thinking counts as output, and the providers' own guidance is that the deepest settings need the room |
+| A request to a provider may wait up to thirty minutes for its answer. A run reviews at most four proposals, and the review job may run for four hours (sections 3, 6) | Three long panel calls are made for each proposal, one after another. Ten proposals in a run could not finish inside the job's time |

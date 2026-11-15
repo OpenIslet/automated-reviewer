@@ -19,7 +19,7 @@ MODE = "shadow"
 AUTHORITY = "shadow"
 PROVIDERS = ("anthropic", "google", "openai")
 GATE_KINDS = ("text", "probability")
-EFFORTS = ("lowest", "low", "medium", "high")
+EFFORTS = ("lowest", "low", "medium", "high", "xhigh")
 CONTEXT_FILES = ("blueprint", "playbook", "idea_graveyard")
 SLOTS_PER_STAGE = 3
 

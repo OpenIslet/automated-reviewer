@@ -28,7 +28,7 @@ from .models import Adapter, Call, ProviderError, Transient
 
 BASE = "https://generativelanguage.googleapis.com/v1beta"
 API_REVISION = "2026-05-20"
-THINKING = {"lowest": "low", "low": "low", "medium": "medium", "high": "high"}
+THINKING = {"lowest": "low", "low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh"}
 # For Gemini 4 Hydrogen one limit covers input and output together. Gemini Decision 1 has its own context window.
 TOTAL_TOKENS = {"gemini-4-hydrogen": 1_048_576}
 DECISION_MODELS = ("gemini-decision-1",)

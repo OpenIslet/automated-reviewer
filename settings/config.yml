@@ -40,7 +40,7 @@ skip_issues: [1]
 reconcile_self_decided: false
 
 caps:
-  proposals_per_run: 10
+  proposals_per_run: 4            # each takes three long panel calls, one after another
   proposals_per_day: 20           # per UTC day. Fixture runs do not count towards this one.
   monthly_per_provider:           # counted from the log, per calendar month in UTC. Fixture runs count.
     calls: 300
@@ -107,9 +107,9 @@ gate:
 
 # Stage B: which outcome will the maintainer record? Three stronger models, all three must agree to be unanimous.
 panel:
-  effort: high
+  effort: xhigh                   # the deepest setting all three models share. The panel's verdict has to be one worth trusting.
   max_input_tokens: 250000        # by the script's own high estimate; a larger input is recorded as too large, never cut
-  max_output_tokens: 32000        # includes reasoning
+  max_output_tokens: 64000        # includes reasoning, which at this setting needs the room
   self_consistency_every: 5       # a second call to each model on every fifth proposal
   reasons_kept: 3
   reason_max_characters: 300

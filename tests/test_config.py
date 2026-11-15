@@ -44,13 +44,13 @@ def test_the_shipped_settings_load():
     assert config.mode == "shadow"
     assert (config.source_repo, config.home_repo) == ("OpenIslet/openislet", "OpenIslet/automated-reviewer")
     assert [s.model for s in config.panel] == ["gemini-4-hydrogen", "gpt-6.1-sol", "claude-sonnet-5-5"]
-    assert all(s.effort == "high" and s.max_output_tokens == 32000 for s in config.panel)
+    assert all(s.effort == "xhigh" and s.max_output_tokens == 64000 for s in config.panel)  # the deepest setting all three panel models share
     assert [s.kind for s in config.gate] == ["text", "text", "text"] and all(s.threshold is None for s in config.gate) and config.gate_threshold == 0.5
     assert all(s.effort == "medium" and s.max_output_tokens == 8000 for s in config.gate)
     assert sorted(s.provider for s in config.gate) == sorted(s.provider for s in config.panel) == ["anthropic", "google", "openai"]
     assert [name for name, _ in config.context_files] == ["blueprint", "playbook", "idea_graveyard"]
     assert [p.name for p in config.evidence_places] == ["evidence_graph", "study_files"]
-    assert (config.caps.proposals_per_run, config.caps.proposals_per_day) == (10, 20)
+    assert (config.caps.proposals_per_run, config.caps.proposals_per_day) == (4, 20)  # four a run: each takes three long panel calls
 
 
 def test_the_rules_for_deciding_come_from_the_settings():

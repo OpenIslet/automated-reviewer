@@ -22,7 +22,7 @@ from typing import Optional
 
 from .models import Adapter, Call, ProviderError, Transient
 
-EFFORT = {"lowest": "low", "low": "low", "medium": "medium", "high": "high"}
+EFFORT = {"lowest": "low", "low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh"}
 CONTEXT_TOKENS = {"claude-sonnet-5-5": 1_000_000, "claude-haiku-5-5": 1_000_000}
 
 

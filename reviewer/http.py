@@ -9,7 +9,7 @@ import urllib.error
 import urllib.request
 from typing import Dict, Optional, Tuple
 
-TIMEOUT_SECONDS = 600
+TIMEOUT_SECONDS = 1800  # a panel model thinking at its deepest setting can take many minutes to answer
 
 
 class Http:

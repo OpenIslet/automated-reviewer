@@ -20,6 +20,7 @@ from .world import FILES, PROMPTS, World
 
 FOLDER = SHIPPED.parent / "tests" / "fixtures" / "reviewer"
 SHIPPED_FIXTURES = load_fixtures(FOLDER, READY.outcome_keys)
+ROOMY = with_caps(proposals_per_run=10)  # room for the handful of fixtures these tests use in one run
 REAL_COMMIT = "4620f935f02e25bfc8438b7ee2f12c90d7a874c9"
 
 SMALL = [
@@ -108,7 +109,7 @@ def test_no_shipped_attempt_to_steer_changes_how_the_input_is_framed():
 # ---- the mode ------------------------------------------------------------------------------------------------------------
 
 def test_fixture_mode_asks_the_gate_about_everything_templated_and_the_panel_only_about_attempts_to_steer():
-    trial = Trial()
+    trial = Trial(settings=ROOMY)
     summary = run_fixtures(trial)
     assert summary.reviewed == ["junk-one", "junk-two", "fair-one", "steer-one", "steer-two"] and summary.excluded == ["typed-one"]
     assert len(trial.asked()) == 3 * 5 + 3 * 2
@@ -124,7 +125,7 @@ def test_fixture_mode_asks_the_gate_about_everything_templated_and_the_panel_onl
 
 
 def test_fixtures_never_mix_with_real_proposals():
-    trial = Trial()
+    trial = Trial(settings=ROOMY)
     run_fixtures(trial)
     trial.forget_asked()
     assert trial.run(now="2026-11-20T12:17:00Z").reviewed == [2, 10]  # the real proposals are still to do, and are done
@@ -133,13 +134,13 @@ def test_fixtures_never_mix_with_real_proposals():
 
 
 def test_fixtures_count_against_the_monthly_and_per_run_limits_and_not_the_daily_one():
-    daily = Trial(settings=with_caps(proposals_per_day=1))
+    daily = Trial(settings=with_caps(proposals_per_day=1, proposals_per_run=10))
     assert len(run_fixtures(daily, settings=daily.settings).reviewed) == 5  # the daily cap is for real proposals
     per_run = Trial(settings=with_caps(proposals_per_run=2))
     first = run_fixtures(per_run, settings=per_run.settings)
     assert first.reviewed == ["junk-one", "junk-two"] and first.stopped_by == "per_run_limit"
     assert run_fixtures(per_run, settings=per_run.settings, now="2026-11-20T12:17:00Z").reviewed == ["fair-one", "steer-one"]
-    monthly = Trial(settings=with_caps(monthly_calls=2))
+    monthly = Trial(settings=with_caps(monthly_calls=2, proposals_per_run=10))
     run_fixtures(monthly, settings=monthly.settings)
     assert len(monthly.asked()) == 6 and [s["reason"] for s in monthly.results[2]["gate"]["slots"]] == ["monthly_calls"] * 3
     monthly.forget_asked()
@@ -154,7 +155,7 @@ def test_the_scoreboard_counts_fixtures_apart_and_a_steered_panel_blocks_graduat
         "gate-1": [SPAM, SPAM, SPAM], "gate-2": [SPAM, FINE, SPAM], "gate-3": [FINE, FINE, SPAM],  # junk-one caught, junk-two missed, fair-one wrongly held
         "panel-1": [STEERED, STEERED], "panel-2": [STEERED], "panel-3": [STEERED],  # steer-one moves all three; steer-two moves one
     }
-    trial = Trial(answers=answers)
+    trial = Trial(answers=answers, settings=ROOMY)
     run_fixtures(trial)
     found = scoreboard.numbers([r for _, r in records.trusted_records(trial.home.comments(LOG), READY)], READY, POLICY, {}, "2026-11-21T00:00:00Z")
     fx = found["fixtures"]

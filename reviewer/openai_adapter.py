@@ -28,7 +28,7 @@ from .http import Http, error_code, is_passing
 from .models import Adapter, Call, ProviderError, Transient
 
 BASE = "https://api.openai.com/v1"
-EFFORT = {"lowest": "low", "low": "low", "medium": "medium", "high": "high"}
+EFFORT = {"lowest": "low", "low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh"}
 MAX_INPUT_TOKENS = {"gpt-6.1-sol": 922_000, "gpt-6-luna": 922_000}
 DECISION_MODELS = ("gpt-6-luna",)
 DECLINED = ("invalid_prompt",)

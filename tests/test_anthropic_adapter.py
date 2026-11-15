@@ -82,8 +82,8 @@ class FakeClient:
 def test_the_request_holds_exactly_what_the_spec_allows():
     request = request_for(SONNET, PREPARED.panel, PANEL_SCHEMA)
     assert set(request) == {"model", "max_tokens", "system", "messages", "output_config"}  # no thinking, tools, sampling, fallback or beta setting
-    assert request["model"] == "claude-sonnet-5-5" and request["max_tokens"] == 32000
-    assert request["output_config"]["effort"] == "high" and request["output_config"]["format"]["type"] == "json_schema"
+    assert request["model"] == "claude-sonnet-5-5" and request["max_tokens"] == 64000
+    assert request["output_config"]["effort"] == "xhigh" and request["output_config"]["format"]["type"] == "json_schema"
     assert request["system"] == [{"type": "text", "text": PREPARED.panel.instructions()}]
     assert len(request["messages"]) == 1 and request["messages"][0]["role"] == "user"
     blocks = request["messages"][0]["content"]
