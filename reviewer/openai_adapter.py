@@ -63,7 +63,8 @@ def decision_request(slot, assembled, question: str) -> dict:
 def _usage(answer: dict):
     usage = answer.get("usage") or {}
     cached = (usage.get("input_tokens_details") or {}).get("cached_tokens")
-    return int(usage.get("input_tokens") or 0), int(cached or 0), int(usage.get("output_tokens") or 0)
+    thought = (usage.get("output_tokens_details") or {}).get("reasoning_tokens")  # already counted inside output_tokens
+    return int(usage.get("input_tokens") or 0), int(cached or 0), int(usage.get("output_tokens") or 0), int(thought or 0)
 
 
 class OpenAIAdapter(Adapter):
@@ -102,8 +103,8 @@ class OpenAIAdapter(Adapter):
             return Call("refused", refusal_category=error_code(answer), latency_ms=took)
         if status != 200 or not isinstance(answer, dict):
             raise ProviderError(self.provider, status, error_code(answer))
-        used, cached, written = _usage(answer)
-        call = Call("ok", reported_model=answer.get("model") if isinstance(answer.get("model"), str) else None, input_tokens=used, cached_input_tokens=cached, output_tokens=written, latency_ms=took)
+        used, cached, written, thought = _usage(answer)
+        call = Call("ok", reported_model=answer.get("model") if isinstance(answer.get("model"), str) else None, input_tokens=used, cached_input_tokens=cached, output_tokens=written, thinking_tokens=thought, latency_ms=took)
         state = answer.get("status")
         if state == "incomplete":
             reason = (answer.get("incomplete_details") or {}).get("reason")
@@ -138,8 +139,8 @@ class OpenAIAdapter(Adapter):
             return Call("refused", refusal_category=error_code(answer), latency_ms=took)
         if status != 200 or not isinstance(answer, dict):
             raise ProviderError(self.provider, status, error_code(answer))
-        used, cached, written = _usage(answer)
-        call = Call("ok", reported_model=answer.get("model") if isinstance(answer.get("model"), str) else None, input_tokens=used, cached_input_tokens=cached, output_tokens=written, latency_ms=took)
+        used, cached, written, thought = _usage(answer)
+        call = Call("ok", reported_model=answer.get("model") if isinstance(answer.get("model"), str) else None, input_tokens=used, cached_input_tokens=cached, output_tokens=written, thinking_tokens=thought, latency_ms=took)
         said = next((a for a in answer.get("answers") or [] if isinstance(a, dict) and a.get("name") == QUESTION_NAME), {})
         if said.get("type") == "refusal":
             call.status, call.refusal_category = "refused", "refusal"

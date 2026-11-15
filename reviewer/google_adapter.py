@@ -106,6 +106,7 @@ class GoogleAdapter(Adapter):
             input_tokens=int(usage.get("total_input_tokens") or 0),
             cached_input_tokens=int(usage.get("total_cached_tokens") or 0),
             output_tokens=int(usage.get("total_output_tokens") or 0) + int(usage.get("total_thought_tokens") or 0),
+            thinking_tokens=int(usage.get("total_thought_tokens") or 0),
             latency_ms=took,
         )
         state = answer.get("status")

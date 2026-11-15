@@ -205,7 +205,7 @@ def _clean_slot(raw, stage: str, settings) -> dict:
     }
     for call in raw.get("calls") if isinstance(raw.get("calls"), list) else []:
         if isinstance(call, dict) and _match(_TIME, call.get("at")):
-            slot["calls"].append({"at": call["at"], "status": _match(_WORD, call.get("status")), "input_tokens": _count(call.get("input_tokens")), "cached_input_tokens": _count(call.get("cached_input_tokens")), "output_tokens": _count(call.get("output_tokens")), "latency_ms": _count(call.get("latency_ms"))})
+            slot["calls"].append({"at": call["at"], "status": _match(_WORD, call.get("status")), "input_tokens": _count(call.get("input_tokens")), "cached_input_tokens": _count(call.get("cached_input_tokens")), "output_tokens": _count(call.get("output_tokens")), "thinking_tokens": _count(call.get("thinking_tokens")), "latency_ms": _count(call.get("latency_ms"))})
     verdict = raw.get("verdict")
     if status == "verdict":
         if not isinstance(verdict, dict):

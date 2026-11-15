@@ -80,7 +80,7 @@ def _one_call(slot, adapter, assembled, schema, question, limits, usage, now: st
             usage.add_turned_down(slot.slot)
         usage.add_call(slot.provider, call.input_tokens, call.output_tokens)
         result["calls"].append(
-            {"at": now, "status": call.status, "input_tokens": int(call.input_tokens or 0), "cached_input_tokens": int(call.cached_input_tokens or 0), "output_tokens": int(call.output_tokens or 0), "latency_ms": int(call.latency_ms or 0)}
+            {"at": now, "status": call.status, "input_tokens": int(call.input_tokens or 0), "cached_input_tokens": int(call.cached_input_tokens or 0), "output_tokens": int(call.output_tokens or 0), "thinking_tokens": int(call.thinking_tokens or 0), "latency_ms": int(call.latency_ms or 0)}
         )
         return call
     return "transient_error"

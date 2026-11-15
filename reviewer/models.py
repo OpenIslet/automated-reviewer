@@ -63,6 +63,7 @@ class Call:
     input_tokens: int = 0
     cached_input_tokens: int = 0
     output_tokens: int = 0
+    thinking_tokens: int = 0  # the part of the output that was thinking, where the provider reports it
     latency_ms: int = 0
     refusal_category: Optional[str] = None
     error_code: Optional[str] = None  # for "rejected": the provider's status and short code

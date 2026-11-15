@@ -9,7 +9,7 @@ from reviewer.config import load
 from .test_config import SHIPPED
 
 ROOT = SHIPPED.parent
-SWITCHED_ON = {"GEMINI_API_KEY", "OPENAI_API_KEY"}  # the providers whose key line is live in the workflow. Each is tested on one proposal first.
+SWITCHED_ON = {"ANTHROPIC_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY"}  # the providers whose key line is live in the workflow: all three
 TEXT = (ROOT / ".github" / "workflows" / "automated-reviewer.yml").read_text(encoding="utf-8")
 WORKFLOW = yaml.safe_load(TEXT)
 TRIGGERS = WORKFLOW.get("on", WORKFLOW.get(True))  # YAML reads a bare "on" as true
@@ -89,7 +89,8 @@ def test_dependencies_are_installed_from_a_lock_file_with_hashes():
     assert len(installs) == 3 and all("--require-hashes -r settings/requirements.lock" in run for run in installs)
     lock = (SHIPPED / "requirements.lock").read_text(encoding="utf-8")
     requirements = [line for line in lock.split("\n") if line and not line.startswith(("#", " "))]
-    assert requirements == ["pyyaml==6.0.3 \\"]
+    assert requirements[0] == "pyyaml==6.0.3 \\" and "anthropic==2.8.0 \\" in requirements  # the reviewer's own dependency, then the Anthropic SDK and all it needs
+    assert len(requirements) == 17 and all(re.fullmatch(r"[a-z0-9-]+==[0-9][0-9.]* " + re.escape(chr(92)), line) for line in requirements)  # every one pinned to one version
     hashes = re.findall(r"--hash=sha256:([0-9a-f]{64})", lock)
     assert len(hashes) > 20 and len(set(hashes)) == len(hashes)
 

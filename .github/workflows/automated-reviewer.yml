@@ -90,18 +90,16 @@ jobs:
       - name: Review
         # Inputs reach the script as environment variables, never inside a command.
         # The model keys belong in this step's environment and nowhere else. A provider is asked only when its key
-        # line below is switched on. They are switched on one at a time, each after a test on one proposal. A model
-        # whose provider is not switched on yet is recorded as waiting.
+        # line is here. A model whose provider has no key line is recorded as waiting.
         env:
           GITHUB_TOKEN: ${{ github.token }}
           AUTOMATED_REVIEWER_ENABLED: ${{ vars.AUTOMATED_REVIEWER_ENABLED }}
           REVIEWER_NUMBERS: ${{ inputs.numbers }}
           REVIEWER_OVERRIDE_CAPS: ${{ inputs.override_caps }}
           REVIEWER_MODE: ${{ inputs.mode }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          # Not switched on yet:
-          # ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scripts/automated_reviewer.py review --out results.json
       - name: Keep the results, whatever happened
         if: always()

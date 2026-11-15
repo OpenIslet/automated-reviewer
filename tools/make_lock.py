@@ -12,7 +12,27 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PINNED = {"PyYAML": "6.0.3"}
+# PyYAML is the reviewer's own dependency. The rest is the Anthropic SDK and everything it needs, worked out for the
+# runner (Python 3.12 on Linux) from PyPI's metadata on 15 November 2026. The other two providers need no package.
+PINNED = {
+    "PyYAML": "6.0.3",
+    "anthropic": "2.8.0",
+    "annotated-types": "0.8.0",
+    "anyio": "4.16.0",
+    "docstring-parser": "0.18.0",
+    "h11": "0.16.0",
+    "httpcore2": "2.16.0",
+    "httpx2": "2.16.0",
+    "idna": "3.20",
+    "jiter": "0.19.0",
+    "opentelemetry-api": "1.45.2",
+    "pydantic": "2.14.3",
+    "pydantic-core": "2.50.4",
+    "sniffio": "1.3.1",
+    "truststore": "0.10.5",
+    "typing-extensions": "4.16.0",
+    "typing-inspection": "0.4.5",
+}
 ACTIONS = ("actions/checkout", "actions/setup-python", "actions/upload-artifact", "actions/download-artifact")
 
 

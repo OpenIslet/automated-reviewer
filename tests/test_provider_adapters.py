@@ -80,7 +80,7 @@ def test_google_panel_request_holds_exactly_what_the_spec_allows():
     assert headers == {"x-goog-api-key": KEY, "Api-Revision": "2026-05-20"} == count_headers
     assert set(body) == {"model", "system_instruction", "input", "generation_config", "response_format", "store"}  # no tool, sampling or cache setting
     assert body["model"] == "gemini-4-hydrogen" and body["store"] is False
-    assert body["generation_config"] == {"thinking_level": "xhigh", "max_output_tokens": 64000}
+    assert body["generation_config"] == {"thinking_level": "xhigh", "max_output_tokens": 128000}
     assert body["response_format"] == {"type": "text", "mime_type": "application/json", "schema": PANEL_SCHEMA}
     assert body["system_instruction"] == PREPARED.panel.instructions()
     assert body["input"] == "\n\n".join(part.text for part in PREPARED.panel.rest())
@@ -166,7 +166,7 @@ def test_openai_panel_request_holds_exactly_what_the_spec_allows():
     assert count_url == "https://api.openai.com/v1/responses/input_tokens" and url == "https://api.openai.com/v1/responses"
     assert headers == {"Authorization": f"Bearer {KEY}"} == count_headers
     assert set(body) == {"model", "instructions", "input", "reasoning", "max_output_tokens", "text", "store"}  # no tool, sampling or stream setting
-    assert body["model"] == "gpt-6.1-sol" and body["store"] is False and body["max_output_tokens"] == 64000 and body["reasoning"] == {"effort": "xhigh"}
+    assert body["model"] == "gpt-6.1-sol" and body["store"] is False and body["max_output_tokens"] == 128000 and body["reasoning"] == {"effort": "xhigh"}
     assert body["text"] == {"format": {"type": "json_schema", "name": "verdict", "schema": PANEL_SCHEMA, "strict": True}}
     assert body["instructions"] == PREPARED.panel.instructions()
     assert body["input"] == [{"role": "user", "content": [{"type": "input_text", "text": part.text} for part in PREPARED.panel.rest()]}]
@@ -307,3 +307,16 @@ def test_a_refused_google_key_stops_the_run_though_it_arrives_as_a_bad_request()
         with pytest.raises(ProviderError) as error:
             GoogleAdapter(KEY, FakeHttp(**{":countTokens": model_gone})).call(HYDROGEN, PREPARED.panel, PANEL_SCHEMA)
         assert error.value.stops_the_run
+
+
+def test_how_much_a_model_thought_is_kept_beside_each_call():
+    google = GoogleAdapter(KEY, FakeHttp(**{":countTokens": COUNT_OK, "/interactions": interaction()})).call(HYDROGEN, PREPARED.panel, PANEL_SCHEMA)
+    openai = OpenAIAdapter(KEY, FakeHttp(**{"/responses/input_tokens": TOKENS_OK, "/responses": response()})).call(SOL, PREPARED.panel, PANEL_SCHEMA)
+    assert (google.thinking_tokens, openai.thinking_tokens) == (3800, 3900)
+    assert (google.output_tokens, openai.output_tokens) == (4000, 4100)  # thinking is inside the output count for both
+    results = []
+    adapters = {"openai": OpenAIAdapter(KEY, FakeHttp(**{"/responses/input_tokens": TOKENS_OK, "/responses": response()}))}
+    review_stage("panel", READY.panel, PREPARED.panel, results, adapters, READY, Limits(READY.caps), Usage(day="2026-11-20"), "2026-11-20T06:17:00Z", index_numbers=PREPARED.index.numbers)
+    sol = next(slot for slot in results if slot["slot"] == "panel-2")
+    assert sol["calls"][0]["thinking_tokens"] == 3900 and sol["calls"][0]["output_tokens"] == 4100
+

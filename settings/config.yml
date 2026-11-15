@@ -109,7 +109,7 @@ gate:
 panel:
   effort: xhigh                   # the deepest setting all three models share. The panel's verdict has to be one worth trusting.
   max_input_tokens: 250000        # by the script's own high estimate; a larger input is recorded as too large, never cut
-  max_output_tokens: 64000        # includes reasoning, which at this setting needs the room
+  max_output_tokens: 128000       # includes reasoning. On the first real run one model used 44,000, and a cut-off answer is never asked again
   self_consistency_every: 5       # a second call to each model on every fifth proposal
   reasons_kept: 3
   reason_max_characters: 300
