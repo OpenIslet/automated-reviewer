@@ -4,30 +4,85 @@ OpenIslet is an open project that keeps a public blueprint for a cure for type 1
 
 This repository holds an automated reviewer for those proposals. **Today it runs in shadow mode: it reviews every proposal and decides nothing.**
 
+## Read the reviews
+
+Everything the reviewer says is public.
+
+- **[Review log](https://github.com/OpenIslet/automated-reviewer/issues/1).** One entry for each proposal: what each model answered, how sure it was, its reasons in its own words, and the maintainer's decision beside them.
+- **[Scoreboard](https://github.com/OpenIslet/automated-reviewer/issues/2).** How often the reviewer and the maintainer reached the same outcome.
+
 ## The plan
 
-The aim is for proposals to be reviewed automatically, with every kind of outcome handled by the reviewer in the end. The project is getting there in steps, and in the open.
+The aim is a reviewer that needs no maintainer. A proposal goes in. The reviewer judges it and tells the person who sent it the outcome and why. An accepted proposal is folded into the blueprint. No person decides any of it.
 
-1. **Now: shadow mode.** The reviewer reads each proposal soon after it is submitted and records what it would decide. The maintainer still reviews every proposal himself, with his own review by the most capable AI models, and his decision is the only one that counts.
-2. **Next: compare.** Every verdict is kept beside the maintainer's decision, and a public scoreboard counts how often they match.
-3. **Later: one kind of outcome at a time.** When the reviewer has matched the maintainer on one kind of outcome over a stated number of cases, that kind can be handed over. Each handover is a separate, published change.
+That is where this is going, not where it is. The project is getting there in steps, in the open, and only as fast as the reviewer proves itself. Today it decides nothing.
 
-Two kinds of outcome are held to a stricter test, because a wrong decision on either does the most harm: changing the blueprint, and ruling out a dead end, which adds to the Idea Graveyard. The panel never decides these alone. The most it can do is pass a proposal up to the third layer, and only after it has matched the maintainer with no disagreement at all, including on cases he decided before he could read its verdict.
+### Four levels
 
-The reviewer works in layers:
+A proposal has to pass every level. Any level can stop it. A proposal that is stopped goes no further, and the person who sent it is told the outcome and the reasons.
 
-| Layer | What it does | Models |
-|---|---|---|
-| 1. Gate | Is this a good-faith proposal, or spam? | Three small models, one from each of three providers |
-| 2. Panel | Which outcome should this proposal get? | Three stronger models, one from each provider |
-| 3. Frontier review | A deeper review by the most capable models | Planned, not built |
+```mermaid
+flowchart TD
+    A["A proposal arrives"] --> B["Level 1: gate<br/>Is this a genuine proposal?<br/>Claude Haiku 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6 Luna"]
+    B -- passes --> C["Level 2: panel<br/>Which outcome fits it?<br/>Claude Sonnet 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6.1 Sol"]
+    C -- passes --> D["Level 3: frontier review<br/>Is the panel right?<br/>For example:<br/>Claude Opus 5.5<br/>Gemini 4 Carbon<br/>GPT-6 Astra"]
+    D -- passes --> E["Level 4: editor<br/>What changes in the blueprint?<br/>For example:<br/>Claude Fable 5.2"]
+    E --> F["The blueprint is updated<br/>The sender is told"]
+    B -. stopped .-> N["The sender is told<br/>the outcome and why"]
+    C -. stopped .-> N
+    D -. stopped .-> N
+    classDef planned stroke-dasharray: 6 4
+    class D,E,F,N planned
+```
+
+Boxes with a solid edge run today, in shadow mode. Boxes with a dashed edge are planned.
+
+| Level | The question it answers | Who answers | Today |
+|---|---|---|---|
+| 1. Gate | Is this a genuine proposal, or spam? | Three small models, one from each of three providers: Claude Haiku 5.5, Gemini 4 Hydrogen and GPT-6 Luna | Runs in shadow mode |
+| 2. Panel | Which outcome fits this proposal? | Three stronger models: Claude Sonnet 5.5, Gemini 4 Hydrogen and GPT-6.1 Sol | Runs in shadow mode |
+| 3. Frontier review | Is the panel right? | The most capable model from each provider, for example Claude Opus 5.5, Gemini 4 Carbon and GPT-6 Astra | Planned, not designed |
+| 4. Editor | What exactly changes in the blueprint? | One of the most capable models, for example Claude Fable 5.2 | Planned, not designed |
+
+Models are replaced as better ones arrive. `settings/config.yml` names the ones in use.
+
+Three rules hold the levels together:
+
+- **Inside a level, no model sees another's answer.** So when all three agree, it means something.
+- **Each level is given the reviews of the levels before it.** A later level can build on an earlier one, or overturn it.
+- **A level stops a proposal only when all of its models agree.** When they are split, the proposal is passed up.
+
+### How a level earns its place
+
+Every level climbs the same four steps, one at a time. It moves up a step only when its public record shows that it has earned it.
+
+1. **Shadow.** It records what it would decide. Nothing it says has any effect.
+2. **Advises.** Its verdict is posted on the proposal, where the sender and the maintainer can both read it. The maintainer still decides.
+3. **Acts.** It passes or stops proposals itself, and tells the sender. The maintainer can still overrule it.
+4. **Alone.** It acts, and no maintainer checks its work.
+
+Today levels 1 and 2 are on the first step. Their verdicts go to a public log, not onto the proposal. The maintainer still reviews every proposal himself, with his own review by the most capable AI models, and his decision is the only one that counts. Every verdict is kept beside his decision, and a public scoreboard counts how often they match.
+
+Two kinds of outcome are held to a stricter test, because a wrong decision on either does the most harm: changing the blueprint, and ruling out a dead end, which adds to the Idea Graveyard. The panel never decides these alone. The most it can do is pass a proposal up to level 3, and only after it has matched the maintainer with no disagreement at all, including on cases he decided before he could read its verdict.
+
+### When no maintainer is needed
+
+Once every level has proved itself, proposals are judged, answered and folded in by the reviewer alone. Some things stay as they are:
+
+- **Everything is in the open.** Every verdict, every reason and every change is public.
+- **Every change can be undone.** Each change to the blueprint is recorded on its own, so one that turns out to be wrong can be reversed.
+- **A sender who disagrees can ask for a fresh review** at the highest level.
+- **One switch stops the whole reviewer.** An owner holds it. The owner can stop the reviewer or undo a change, and decides nothing else about any proposal.
+- **The record goes on being kept.** A level whose record slips goes back a step.
+
+How a level is checked once no maintainer is deciding beside it is not designed yet. Nothing moves to the last step until it is.
 
 ## What it does today
 
 Soon after a proposal is submitted, the reviewer:
 
-1. asks the three gate models whether it is spam;
-2. asks the three panel models which outcome they would give it;
+1. asks the three models of level 1, the gate, whether it is spam;
+2. asks the three models of level 2, the panel, which outcome they would give it;
 3. writes down what each model said, with its reasons;
 4. adds the maintainer's decision beside it when that decision is made;
 5. keeps a scoreboard of how often the two were the same.

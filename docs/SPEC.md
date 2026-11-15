@@ -1,6 +1,6 @@
 # Automated reviewer: the review pipeline, in shadow mode
 
-**Status:** design, revision 5.4 (2026-11-15). Revision 4.1 was reviewed and approved for implementation. Revision 4.2 added what was settled while building, revision 5 records three decisions the maintainer made on 15 November, and revision 5.1 records the faults that two independent reviews of the build found that day. **The spec's reviewer has reviewed the build and revisions 4.2, 5 and 5.1.** It approved 4.2, and approved the build to go on to the go-live steps once four faults it found were put right. Revision 5.2 records those fixes and some smaller ones, revision 5.3 the maintainer's answers to the two questions of policy the review raised, and revision 5.4 his decision to run the panel at its deepest setting. Section 16 lists every change; 5.2 to 5.4 are its last three tables and have not themselves been reviewed.
+**Status:** design, revision 5.5 (2026-11-15). Revision 4.1 was reviewed and approved for implementation. Revision 4.2 added what was settled while building, revision 5 records three decisions the maintainer made on 15 November, and revision 5.1 records the faults that two independent reviews of the build found that day. **The spec's reviewer has reviewed the build and revisions 4.2, 5 and 5.1.** It approved 4.2, and approved the build to go on to the go-live steps once four faults it found were put right. Revision 5.2 records those fixes and some smaller ones, revision 5.3 the maintainer's answers to the two questions of policy the review raised, revision 5.4 his decision to run the panel at its deepest setting, and revision 5.5 the direction he set for the finished design, which changes nothing that is built. Section 16 lists every change; 5.2 to 5.5 are its last four tables and have not themselves been reviewed.
 **Scope:** process and code only. No scientific knowledge is needed to implement it.
 **How to read it:** the numbered sections were written for revision 4. Where one of them disagrees with the section "Revision 5", revision 5 is what the code does. Section 16 lists every change and why.
 
@@ -32,7 +32,15 @@
 
 **The maintainer's own proposals** (his decision, 15 November). In shadow mode they are not reviewed: `reconcile_self_decided` stays `false`. He both writes and decides them, so they cannot count as a test, they already go through his own review by the most capable models, and they are the longest and so the most expensive to review. Each is recorded in the log as left out, with the reason, and the README says so. A manual run can still name one. When the reviewer is given authority over any kind of outcome, his proposals are to go through it like everyone else's, and the setting is switched on as part of that change.
 
-**A layered review.** The reviewer is described as layers: the gate (three small models), the panel (three stronger models), and a third layer of the most capable models, which is planned and not designed or built.
+**Four levels, and no maintainer at the end** (the maintainer's direction, 15 November; revision 5.5). The finished design has four levels: the gate (three small models), the panel (three stronger models), a frontier review by the most capable model from each of three providers, and an editor, one of the most capable models, which drafts the change to the blueprint. The numbered sections call the first two "stages" and the third "the third layer".
+
+- A proposal must pass every level. A level stops a proposal only when all of its models agree; when they are split it is passed up. The person who sent a stopped proposal is told the outcome and why.
+- Each level is given the reviews of the levels before it. Inside a level no model sees another's answer.
+- Each level climbs four steps, one at a time, as its public record earns it: shadow, advises, acts, alone.
+- Once every level has proved itself the reviewer runs with no maintainer deciding. An owner keeps one switch that stops it, can undo a change, and decides nothing else about any proposal.
+- **This grants nothing and designs nothing.** Levels 3 and 4 are not designed or built, `mode: shadow` is still the only mode the code accepts, and each step towards this is a separate design with its own review (section 15).
+- Three principles in section 2 hold as written today and will have to change on the way: principle 2 (the maintainer's decision is the only one that counts), principle 3 (stages do not gate each other: in the finished design a stopped proposal goes no further) and principle 4 (no model sees another model's work: this will hold inside a level only).
+- The README shows the plan, with a diagram and the models at each level.
 
 ## 1. Goal
 
@@ -772,3 +780,12 @@ Each of these is a design of its own. This spec builds none of them.
 | The panel's output limit is 128,000 tokens (sections 5, 6) | On the first real run one panel model used about 44,000 tokens of a 64,000 limit on an ordinary proposal. An answer cut off at the limit is recorded as no verdict and is never asked again, so the limit has to sit well above what a harder proposal needs. It is a ceiling, and each provider's models allow it |
 | Each call's record also says how many of its output tokens were thinking, where the provider reports that (section 7) | On the same run one model answered at `xhigh` with very little output. The count shows how deeply each model really thought |
 | All three providers are switched on. The Anthropic SDK and the fifteen packages it needs are pinned in the lock file with their published hashes (section 10) | The first two providers were proved on one proposal first. The other two providers need no package |
+
+**Revision 5.5** (15 November). The maintainer's direction for the finished design. Nothing that is built changes. Not yet reviewed.
+
+| Change | Why |
+|---|---|
+| The finished design is described as four levels: gate, panel, frontier review, and an editor that drafts the change to the blueprint. A proposal must pass every level, a level stops one only when all of its models agree, and the sender is told the outcome and why (Revision 5 section, README) | The maintainer's direction. The third layer was already planned; the editor, and the rule for stopping a proposal, are new |
+| Each level is to be given the reviews of the levels before it. Inside a level no model sees another's answer (Revision 5 section) | So a later level can build on an earlier one or overturn it, while agreement inside a level still means something. Principle 4 holds as written until this is designed |
+| The stated end is a reviewer with no maintainer deciding, once every level has proved itself. An owner keeps one switch that stops it and can undo a change (Revision 5 section, README) | The maintainer's direction. Revision 5 already said that no outcome is barred for ever. Principles 2 and 3 hold as written until each step is designed and reviewed |
+| Not designed: levels 3 and 4, how a sender is told, the fresh review a sender can ask for, and how a level is checked once no maintainer decides beside it | Each needs its own revision and review before anything is built. The last is the hardest: the scoreboard measures agreement with the maintainer, and at the last step there is no such decision to compare with |
