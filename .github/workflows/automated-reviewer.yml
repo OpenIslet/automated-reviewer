@@ -10,11 +10,10 @@
 name: Automated reviewer
 
 on:
-  # The schedule is the last step of the build. Until then a run is started by hand. When it is on, a run starts every
-  # hour, and the review job is skipped unless the quick look finds something to do.
-  # schedule:
-  #   - cron: "17 * * * *"
-  #   - cron: "47 3 * * *"   # once a day the scoreboard is rebuilt even with nothing to do, so its date shows the clock is alive
+  # Runs every hour; the review job is skipped unless the quick look finds something to do.
+  schedule:
+    - cron: "17 * * * *"
+    - cron: "47 3 * * *"   # once a day the scoreboard is rebuilt even with nothing to do, so its date shows the clock is alive
   workflow_dispatch:
     inputs:
       mode:
