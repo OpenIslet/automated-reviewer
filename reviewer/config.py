@@ -268,6 +268,7 @@ def _slots(section: _Section, stage: str, effort: str, max_output_tokens: int, t
     slots: List[ModelSlot] = []
     for i, item in enumerate(section.items("models")):
         entry = _Section(item, f"{stage}.models[{i}]")
+        slot_effort = entry.choice("effort", EFFORTS) if "effort" in entry._data else effort
         slots.append(
             ModelSlot(
                 slot=entry.text("slot", _SLOT),
@@ -275,7 +276,7 @@ def _slots(section: _Section, stage: str, effort: str, max_output_tokens: int, t
                 provider=entry.choice("provider", PROVIDERS),
                 model=entry.text("model", optional=True),
                 kind=entry.choice("kind", GATE_KINDS) if stage == "gate" else "panel",
-                effort=effort,
+                effort=slot_effort,
                 max_output_tokens=max_output_tokens,
                 threshold=None,
                 max_input_tokens=max_input_tokens,

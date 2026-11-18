@@ -297,7 +297,7 @@ Two rules for the parser, both found by checking real proposals:
 
 **Task:** predict which outcome the maintainer will record for this proposal.
 
-**Models (configurable):** `gemini-4-hydrogen`, `gpt-6.1-sol`, `claude-sonnet-5-5`.
+**Models (configurable):** `gemini-4-neon`, `gpt-6.2-sol`, `claude-sonnet-5-5`.
 
 **Output schema, identical for all three:**
 
@@ -583,7 +583,7 @@ Proposed defaults, taken from the review, to accept or change:
 | Self-decided proposals | Excluded from scheduled runs |
 | Schedule and caps | Every six hours; 10 proposals a run; 20 a day; monthly caps per provider in calls and tokens |
 | Reasoning or effort level | `high` for the panel, with 32,000 output tokens; `medium` for the gate, with 8,000 |
-| Panel models | `gemini-4-hydrogen`, `gpt-6.1-sol`, `claude-sonnet-5-5` |
+| Panel models | `gemini-4-neon`, `gpt-6.2-sol`, `claude-sonnet-5-5` |
 | Spam and administrative closures | Add `outcome:spam`; keep `status:closed-triage` as an exclusion |
 | `outcomes.yml` | Copied word for word from the published definitions of the seven outcomes, plus `decision:needs-work` and `outcome:spam` |
 | Naming the earlier proposal for "already covered" | A line `Same as: IIP-NNNN` in the closing comment |
@@ -598,9 +598,9 @@ Only the maintainer can do these:
 
 Answered from each provider's published documentation on 14 November 2026. The adapters are written to these answers and tested against stand-ins; **each still has to be confirmed by a first real call.**
 
-- **Gemini 4 Hydrogen** is asked through Google's Interactions API, which Google's documentation names as the one to use (it calls generateContent legacy). The schema goes in `response_format` and the depth in `generation_config.thinking_level`. One limit of 1,048,576 tokens covers input and output together.
+- **Gemini 4 Neon / Gemini 4 Hydrogen** are asked through Google's Interactions API, which Google's documentation names as the one to use (it calls generateContent legacy). The schema goes in `response_format` and the depth in `generation_config.thinking_level`. One limit of 1,048,576 tokens covers input and output together.
 - **Gemini Decision 1** (not in use) is asked through Google's Decisions API: one yes-or-no question, answered with a probability from 0.01 to 0.99 and no text. Its answer does not name the model that gave it.
-- **GPT-6.1 Sol** is asked through OpenAI's Responses API, with strict structured outputs and `reasoning.effort`. Its input limit is 922,000 tokens.
+- **GPT-6.2 Sol** is asked through OpenAI's Responses API, with strict structured outputs and `reasoning.effort`. Its input limit is 922,000 tokens.
 - **GPT-6 Luna** is OpenAI's small model. The gate asks it in text through the Responses API; its input limit is 922,000 tokens. It is also the only model on OpenAI's Decisions API, which answers one "predicate" question with a probability and no text. That path is not in use.
 - **Schema constraints:** all three providers enforce types, required fields and the list of outcomes. None enforces lengths or ranges, so the script applies those itself, as section 6 says. Claude's structured outputs need `anyOf` for a field that may be null; the other two accept a list of types.
 - **Blocked content:** Google answers with an HTTP 400 and a short code; OpenAI with a refusal part, an incomplete answer marked `content_filter`, or an `invalid_prompt` error; Claude with `stop_reason: refusal`. All are recorded as refusals with the provider's category.

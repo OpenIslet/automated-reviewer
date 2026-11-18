@@ -107,7 +107,7 @@ gate:
 
 # Stage B: which outcome will the maintainer record? Three stronger models, all three must agree to be unanimous.
 panel:
-  effort: xhigh                   # the deepest setting all three models share. The panel's verdict has to be one worth trusting.
+  effort: xhigh                   # default depth for the panel; individual slots may override it
   max_input_tokens: 250000        # by the script's own high estimate; a larger input is recorded as too large, never cut
   max_output_tokens: 128000       # includes reasoning. On the first real run one model used 44,000, and a cut-off answer is never asked again
   self_consistency_every: 5       # a second call to each model on every fifth proposal
@@ -116,10 +116,11 @@ panel:
   models:
     - slot: panel-1
       provider: google
-      model: gemini-4-hydrogen
+      model: gemini-4-neon
+      effort: high                # avoids hitting the single-segment reasoning ceiling while preserving strong panel review
     - slot: panel-2
       provider: openai
-      model: gpt-6.1-sol
+      model: gpt-6.2-sol
     - slot: panel-3
       provider: anthropic
       model: claude-sonnet-5-5

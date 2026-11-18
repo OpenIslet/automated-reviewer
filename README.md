@@ -29,7 +29,7 @@ config:
 ---
 flowchart TD
     A["A proposal arrives"] --> B["Level 1: gate<br/>Is this a genuine proposal?<br/>Claude Haiku 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6 Luna"]
-    B -- 2 of 3 pass --> C["Level 2: panel<br/>Which outcome fits it?<br/>Claude Sonnet 5.5<br/>Gemini 4 Hydrogen<br/>GPT-6.1 Sol"]
+    B -- 2 of 3 pass --> C["Level 2: panel<br/>Which outcome fits it?<br/>Claude Sonnet 5.5<br/>Gemini 4 Neon<br/>GPT-6.2 Sol"]
     C -- 2 of 3 pass --> D["Level 3: frontier review<br/>Is the panel right?<br/>For example:<br/>Claude Opus 5.5<br/>Gemini 4 Carbon<br/>GPT-6 Astra"]
     D -- 2 of 3 pass --> E["Level 4: editor, the final gate<br/>What changes in the blueprint?<br/>For example:<br/>Claude Fable 5.2<br/>or Claude Mythos 5.2"]
     E -- passes --> F["The blueprint is updated<br/>The sender is told"]
@@ -46,7 +46,7 @@ Boxes with a solid edge run today, in shadow mode. Boxes with a dashed edge are 
 | Level | The question it answers | Who answers | Today |
 |---|---|---|---|
 | 1. Gate | Is this a genuine proposal, or spam? | Three small models, one from each of three providers: Claude Haiku 5.5, Gemini 4 Hydrogen and GPT-6 Luna | Runs in shadow mode |
-| 2. Panel | Which outcome fits this proposal? | Three stronger models: Claude Sonnet 5.5, Gemini 4 Hydrogen and GPT-6.1 Sol | Runs in shadow mode |
+| 2. Panel | Which outcome fits this proposal? | Three stronger models: Claude Sonnet 5.5, Gemini 4 Neon and GPT-6.2 Sol | Runs in shadow mode |
 | 3. Frontier review | Is the panel right? | The most capable model from each provider, for example Claude Opus 5.5, Gemini 4 Carbon and GPT-6 Astra | Planned, not designed |
 | 4. Editor | What exactly changes in the blueprint? And does it change, when level 3 was split? | One of the most capable models, for example Claude Fable 5.2 or Claude Mythos 5.2 | Planned, not designed |
 

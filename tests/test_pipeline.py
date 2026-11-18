@@ -321,7 +321,7 @@ def test_the_policy_version_changes_with_what_shapes_the_input_and_with_nothing_
     other_models = tuple(dataclasses.replace(s, model="another-model") for s in SETTINGS.panel)
     same = dataclasses.replace(SETTINGS, panel=other_models, caps=dataclasses.replace(SETTINGS.caps, proposals_per_day=5), log_issue=3, scoreboard_issue=4)
     assert identity.policy_version(same, PROMPTS) == version
-    assert [r["model"] for r in identity.roster(SETTINGS) if r["stage"] == "panel"] == ["gemini-4-hydrogen", "gpt-6.1-sol", "claude-sonnet-5-5"]
+    assert [r["model"] for r in identity.roster(SETTINGS) if r["stage"] == "panel"] == ["gemini-4-neon", "gpt-6.2-sol", "claude-sonnet-5-5"]
 
 
 def test_the_prompts_say_what_the_spec_requires_and_no_more():

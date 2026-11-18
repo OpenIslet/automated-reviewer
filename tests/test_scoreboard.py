@@ -173,7 +173,7 @@ def test_the_page_is_built_from_counts_and_names_proposals_only_in_code_formatti
     assert text.startswith("**Automated reviewer scoreboard, shadow mode. Nothing here is a decision")
     assert "not frozen yet, so every result below is retrospective" in text
     assert "All three panel models agreed in 5 of 6. When they agreed, the maintainer had recorded the same outcome in 4 of 5." in text
-    assert "| `gemini-4-hydrogen` | 4 of 6 (67%) | 0 | 1 of 1 | 7 | 7000 | 700 |" in text
+    assert "| `gemini-4-neon` | 4 of 6 (67%) | 0 | 1 of 1 | 7 | 7000 | 700 |" in text
     assert "| `claude-sonnet-5-5` | 4 of 6 (67%) | 1 (refused 1) |" in text
     assert "- `#3`: Changed the blueprint then, Added evidence now (towards the panel)." in text
     assert "| Changed the blueprint | 0 of 50 | 0 | 0 | counting |" in text
@@ -252,7 +252,7 @@ def test_a_model_replaced_part_way_is_shown_beside_the_one_it_replaced():
     newer = case(33, e, (e, e, e))
     newer["panel"]["slots"][1]["model"] = "gpt-7-made-up"
     page = scoreboard.render(built([case(32, e, (e, e, e)), newer], now_labels={}), READY)
-    assert "| `gpt-6.1-sol` + `gpt-7-made-up` | 2 of 2 (100%) |" in page and "was replaced part-way and the row counts both together" in page
+    assert "| `gpt-6.2-sol` + `gpt-7-made-up` | 2 of 2 (100%) |" in page and "was replaced part-way and the row counts both together" in page
     assert "replaced part-way" not in scoreboard.render(built(), READY)
 
 

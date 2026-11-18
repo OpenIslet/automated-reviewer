@@ -1,4 +1,4 @@
-"""The adapter for Google's models: Gemini 4 Hydrogen on the panel and, at a lower setting, on the gate.
+"""The adapter for Google's models: Gemini 4 Neon on the panel and Gemini 4 Hydrogen on the gate.
 
 Both slots answer in text, through the Interactions API. The Decisions API path below it, for Gemini Decision 1,
 which answers a yes-or-no question with a probability, is kept and tested but no slot in the settings uses it.
@@ -29,8 +29,8 @@ from .models import Adapter, Call, ProviderError, Transient
 BASE = "https://generativelanguage.googleapis.com/v1beta"
 API_REVISION = "2026-05-20"
 THINKING = {"lowest": "low", "low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh"}
-# For Gemini 4 Hydrogen one limit covers input and output together. Gemini Decision 1 has its own context window.
-TOTAL_TOKENS = {"gemini-4-hydrogen": 1_048_576}
+# For Gemini 4 models one limit covers input and output together. Gemini Decision 1 has its own context window.
+TOTAL_TOKENS = {"gemini-4-hydrogen": 1_048_576, "gemini-4-neon": 1_048_576}
 DECISION_MODELS = ("gemini-decision-1",)
 BLOCKED = ("safety", "jailbreak", "prohibited_content", "blocklist", "recitation", "language", "spii", "image_safety", "content_blocked")
 QUESTION_KEY = "spam"

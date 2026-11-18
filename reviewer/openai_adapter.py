@@ -1,4 +1,4 @@
-"""The adapter for OpenAI's models: GPT-6.1 Sol on the panel, and GPT-6 Luna on the gate.
+"""The adapter for OpenAI's models: GPT-6.2 Sol on the panel, and GPT-6 Luna on the gate.
 
 Both slots answer in text, through the Responses API. The Decisions API path below it, for a model that answers a
 yes-or-no question with a probability, is kept and tested but no slot in the settings uses it.
@@ -29,7 +29,7 @@ from .models import Adapter, Call, ProviderError, Transient
 
 BASE = "https://api.openai.com/v1"
 EFFORT = {"lowest": "low", "low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh"}
-MAX_INPUT_TOKENS = {"gpt-6.1-sol": 922_000, "gpt-6-luna": 922_000}
+MAX_INPUT_TOKENS = {"gpt-6.1-sol": 922_000, "gpt-6.2-sol": 922_000, "gpt-6-luna": 922_000}
 DECISION_MODELS = ("gpt-6-luna",)
 DECLINED = ("invalid_prompt",)
 NO_CREDIT = ("insufficient_quota",)  # arrives with status 429, like a rate limit, and is not one

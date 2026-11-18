@@ -258,7 +258,7 @@ def test_a_review_that_had_begun_is_stopped_not_erased_when_the_proposal_is_then
     assert calls_in(record) == 5 and record["decision"]["label"] == "status:closed-triage"  # still in the log, so the limits still count them
     body = log_comment(trial, 12)["body"]
     assert "The review was stopped part-way: it was set aside for an administrative reason. The answers already given are kept." in body
-    assert "| Panel | `gpt-6.1-sol` | not asked |  |" in body and "The maintainer set this proposal aside." in body
+    assert "| Panel | `gpt-6.2-sol` | not asked |  |" in body and "The maintainer set this proposal aside." in body
     found = scoreboard.numbers(list(trial.logged().values()), READY, POLICY, {12: {"label": None}}, "2026-11-22T00:00:00Z")
     assert found["coverage"]["stopped_part_way"] == {"administrative_triage": [12]} and found["coverage"]["reviewed"] == 0
     assert "- Review stopped part-way and left out of every figure, set aside for an administrative reason: `#12`." in scoreboard.render(found, READY)
@@ -476,7 +476,7 @@ def test_a_request_turned_down_is_asked_again_on_later_runs_before_it_becomes_an
         trial.run(now=f"2026-11-20T{hour}:17:00Z", numbers=[2])
     slot = by_slot(trial.logged()[2], "panel")["panel-2"]
     assert (slot["status"], slot["reason"], slot["error_code"], slot["runs"]) == ("pending", "rejected", "400:invalid_request_error", 2)
-    assert "| Panel | `gpt-6.1-sol` | turned down by the provider (`400:invalid_request_error`), to be asked again |  |" in log_comment(trial, 2)["body"]
+    assert "| Panel | `gpt-6.2-sol` | turned down by the provider (`400:invalid_request_error`), to be asked again |  |" in log_comment(trial, 2)["body"]
     assert _only_waiting(trial.logged()[2], "2026-11-20T07:40:00Z") is False  # it is work for the next run on the clock
     trial.run(now="2026-11-20T08:17:00Z", numbers=[2])
     slot = by_slot(trial.logged()[2], "panel")["panel-2"]

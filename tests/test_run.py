@@ -95,7 +95,7 @@ def test_a_run_reviews_every_decided_proposal_oldest_first_and_records_what_the_
     assert ten["panel"]["second_opinion"] is True and all(s["second"] == {"status": "verdict", "outcome": "already_covered", "same": True} for s in ten["panel"]["slots"])
     assert two["panel"]["second_opinion"] is False and all("second" not in s for s in two["panel"]["slots"])
     assert len(trial.asked()) == 6 + 9
-    assert [s["model"] for s in ten["panel"]["slots"]] == ["gemini-4-hydrogen", "gpt-6.1-sol", "claude-sonnet-5-5"]
+    assert [s["model"] for s in ten["panel"]["slots"]] == ["gemini-4-neon", "gpt-6.2-sol", "claude-sonnet-5-5"]
 
 
 def test_in_shadow_mode_no_record_ever_carries_an_action_and_nothing_is_written_to_the_source_repository():
